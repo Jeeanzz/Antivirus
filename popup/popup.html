@@ -69,7 +69,7 @@
     
     <div class="stats-graph">
       <!-- Ici, vous pourriez intégrer une bibliothèque de graphiques comme Chart.js -->
-      <canvas id="statsChart"></canvas>
+      <canvas id="statsChart" height="150"></canvas>
     </div>
     
     <div class="stats-categories">
@@ -93,12 +93,13 @@
       
       <div class="stat-box locked">
         <div class="stat-icon">🔒</div>
-        <div class="stat-name">Content</div>
+        <div class="stat-name">Protection Premium</div>
         <div class="upgrade-badge">🔒</div>
+        <div class="stat-value">-</div>
       </div>
     </div>
     
-    <a href="#" id="showMoreHistory" class="more-link">Show more history ›</a>
+    <a href="#" id="showMoreHistory" class="more-link">Afficher plus d'historique ›</a>
   </div>
   
   <div id="protectionContent" class="tab-content">
@@ -120,11 +121,11 @@
       <div class="protection-icon">🔐</div>
       <div class="protection-info">
         <div class="protection-name">Sécurité des appareils</div>
-        <div class="protection-status warning">Installé</div>
+        <div class="protection-status warning">Non installé</div>
         <div class="protection-message">Les cybermenaces sont pernicieuses. Gardez-les à distance et protégez votre appareil avec notre protection en temps réel.</div>
       </div>
       <div class="protection-action">
-        <button class="upgrade-button">Mettre à niveau</button>
+        <button class="upgrade-button" id="upgradePlan">Mettre à niveau</button>
       </div>
     </div>
     
@@ -136,11 +137,13 @@
         <div class="protection-message">Sécurisez votre connexion WiFi et protégez votre vie privée en ligne avec notre VPN sans logs.</div>
       </div>
       <div class="protection-action">
-        <button class="upgrade-button">Mettre à niveau</button>
+        <button class="upgrade-button" id="upgradeVPN">Mettre à niveau</button>
       </div>
     </div>
   </div>
   
+  <!-- Ajout de Chart.js pour les statistiques -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>
