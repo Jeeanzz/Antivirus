@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "MonAntivirus Navigator",
+  "version": "1.0",
+  "description": "Extension de sécurité qui bloque les publicités, traceurs et sites malveillants",
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "tabs",
+    "storage",
+    "webNavigation",
+    "scripting",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon-16.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": [
+        "content-scripts/adBlocker.js",
+        "content-scripts/trackerBlocker.js",
+        "content-scripts/malwareDetector.js"
+      ],
+      "run_at": "document_start"
+    }
+  ],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ad_blocking_rules",
+        "enabled": true,
+        "path": "rules/adblocking_rules.json"
+      },
+      {
+        "id": "malware_blocking_rules",
+        "enabled": true,
+        "path": "rules/malware_rules.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,288 @@
+body {
+  width: 350px;
+  min-height: 400px;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #f0f0f0;
+  background-color: #1a1a24;
+}
+
+header {
+  padding: 10px 15px;
+  border-bottom: 1px solid #303046;
+}
+
+h1 {
+  margin: 0;
+  padding: 5px 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  margin-top: 10px;
+}
+
+.tab-button {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #8085a5;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-button.active {
+  color: #4285f4;
+  border-bottom: 2px solid #4285f4;
+}
+
+.tab-content {
+  display: none;
+  padding: 15px;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.protection-toggles {
+  margin: 20px 0;
+}
+
+.toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+}
+
+/* Style pour les interrupteurs à bascule */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #2d2d3e;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #4285f4;
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+.slider.round {
+  border-radius: 24px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.stats-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.stats-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 6px solid #22a045;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.stats-number {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.stats-label {
+  font-size: 14px;
+}
+
+#blockStatus {
+  color: #8085a5;
+}
+
+.domain-name {
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #2d2d3e;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.stats-categories {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.stat-box {
+  background-color: #2d2d3e;
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+}
+
+.stat-box.active {
+  border: 1px solid #4285f4;
+}
+
+.stat-box.locked {
+  opacity: 0.7;
+}
+
+.stat-name {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.upgrade-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background-color: #ffa000;
+  color: #fff;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+}
+
+.more-link {
+  display: block;
+  text-align: center;
+  color: #4285f4;
+  margin-top: 20px;
+  text-decoration: none;
+}
+
+.protection-intro {
+  color: #8085a5;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.protection-item {
+  display: flex;
+  background-color: #2d2d3e;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.protection-icon {
+  margin-right: 15px;
+  font-size: 24px;
+}
+
+.protection-info {
+  flex: 1;
+}
+
+.protection-name {
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+.protection-status {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.protection-status.active {
+  color: #22a045;
+}
+
+.protection-status.warning {
+  color: #ffa000;
+}
+
+.protection-status.inactive {
+  color: #8085a5;
+}
+
+.protection-message {
+  font-size: 12px;
+  color: #8085a5;
+  line-height: 1.4;
+}
+
+.protection-action {
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.status-badge {
+  background-color: #2d2d3e;
+  border: 1px solid #8085a5;
+  color: #8085a5;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.upgrade-button {
+  background-color: #ffa000;
+  color: #fff;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  white-space: nowrap;
+}
