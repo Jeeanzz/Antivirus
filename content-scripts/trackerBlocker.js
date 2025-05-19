@@ -1,4 +1,16 @@
 (function() {
+  // État de la protection
+  const protectionStatus = {
+    enabled: true
+  };
+  
+  // Vérifier si la protection est activée
+  chrome.storage.local.get(['protectionEnabled'], function(result) {
+    if (result.protectionEnabled) {
+      protectionStatus.enabled = result.protectionEnabled.adsTrackers;
+    }
+  });
+  
   // Liste des scripts de suivi connus
   const knownTrackers = [
     'google-analytics.com/analytics.js',
@@ -7,30 +19,63 @@
     'platform.twitter.com',
     'ads.linkedin.com',
     'analytics.twitter.com',
-    'doubleclick.net'
+    'doubleclick.net',
+    'googletagmanager.com',
+    'scorecardresearch.com',
+    'amazon-adsystem.com',
+    'criteo.com',
+    'adsrvr.org',
+    'taboola.com',
+    'outbrain.com',
+    'chartbeat.com',
+    '.quantserve.com',
+    'hotjar.com',
+    'adnxs.com',
+    'sharethis.com',
+    'yandex.ru/metrika',
+    'optimizely.com'
   ];
   
   // Bloquer les requêtes de traceurs et compter
   function blockTrackers() {
+    if (!protectionStatus.enabled) return;
+    
     let count = 0;
     
-    // Observer les requêtes réseau n'est pas directement possible dans un script de contenu
-    // Nous allons donc nous concentrer sur les scripts insérés
+    // Observer les scripts insérés
     const scripts = document.querySelectorAll('script[src]');
     scripts.forEach(script => {
-      const src = script.getAttribute('src');
-      if (src && knownTrackers.some(tracker => src.includes(tracker))) {
-        // Empêcher le chargement du script
-        script.remove();
-        count++;
+      const src = script.getAttribute('src') || '';
+      if (knownTrackers.some(tracker => src.includes(tracker))) {
+        if (!script.dataset.blocked) {
+          script.dataset.blocked = 'true';
+          script.remove();
+          count++;
+        }
       }
     });
     
     // Supprimer également les pixels de suivi
     const imgs = document.querySelectorAll('img[src*="pixel"], img[src*="beacon"], img[width="1"][height="1"]');
     imgs.forEach(img => {
-      img.remove();
-      count++;
+      if (!img.dataset.blocked) {
+        img.dataset.blocked = 'true';
+        img.remove();
+        count++;
+      }
+    });
+    
+    // Vérifier les iframes de suivi
+    const iframes = document.querySelectorAll('iframe[src]');
+    iframes.forEach(iframe => {
+      const src = iframe.getAttribute('src') || '';
+      if (knownTrackers.some(tracker => src.includes(tracker))) {
+        if (!iframe.dataset.blocked) {
+          iframe.dataset.blocked = 'true';
+          iframe.remove();
+          count++;
+        }
+      }
     });
     
     if (count > 0) {
@@ -47,7 +92,7 @@
   
   // Observer les changements dans le DOM
   const observer = new MutationObserver(() => {
-    blockTrackers();
+    setTimeout(blockTrackers, 100); // Petit délai pour laisser le DOM se stabiliser
   });
   
   observer.observe(document.documentElement, {
@@ -57,6 +102,8 @@
   
   // Bloquer les cookies tiers et les techniques de fingerprinting
   function setupPrivacyProtection() {
+    if (!protectionStatus.enabled) return;
+    
     // Remplacer la méthode navigator.sendBeacon pour bloquer les pings analytics
     if (navigator.sendBeacon) {
       const originalSendBeacon = navigator.sendBeacon;
@@ -71,7 +118,38 @@
         return originalSendBeacon.apply(this, arguments);
       };
     }
+    
+    // Bloquer certaines méthodes de fingerprinting
+    if (document.cookie) {
+      const originalCookie = Object.getOwnPropertyDescriptor(Document.prototype, 'cookie');
+      Object.defineProperty(Document.prototype, 'cookie', {
+        get: function() {
+          return originalCookie.get.apply(this);
+        },
+        set: function(val) {
+          // Bloquer les cookies contenant des identifiants de traceurs connus
+          if (knownTrackers.some(tracker => val.includes(tracker))) {
+            chrome.runtime.sendMessage({
+              action: "trackersBlocked",
+              count: 1
+            });
+            return '';
+          }
+          return originalCookie.set.apply(this, arguments);
+        }
+      });
+    }
   }
+  
+  // Écouter les messages du background script
+  chrome.runtime.onMessage.addListener((message) => {
+    if (message.action === "toggleProtection" && message.feature === "adsTrackers") {
+      protectionStatus.enabled = message.enabled;
+      if (message.enabled) {
+        blockTrackers(); // Réappliquer le blocage si on active
+      }
+    }
+  });
   
   setupPrivacyProtection();
 })();
